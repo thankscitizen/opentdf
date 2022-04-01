@@ -1,10 +1,10 @@
-# opentdf Quick Start: Writing a Web App
-*Using FastAPI to Access the opentdf backend*
+# OpenTDF Quick Start: Writing a Web App
+*Using FastAPI to Access the OpenTDF backend*
 > Author: Dave M
 > <br>Created: 2021-10-01
 > <br>Last Updated: 2021-10-05
 
-Let's make a single-page web app that allows a user to quickly encrypt and decrypt files with opentdf!
+Let's make a single-page web app that allows a user to quickly encrypt and decrypt files with OpenTDF!
 
 > Note: This tutorial sequence will be in several parts. First, we will get a local environment up and running with an app that encrypts using its own credentials. Next, we will demonstrate allowing an application to encrypt with the user's credentials. Finally, we discuss how we can extend this to enable client side encryption to allow the server to host only encrypted key and policy information.
 
@@ -132,7 +132,7 @@ async def create_upload_file(file: bytes = File(...)):
 
 #### Running in a local cluster
 
-To work well with a local cluster, we will be leveraging the existing opentdf backend quickstart, which builds a working opentdf fleet of microservices into a local kubernetes cluster, using [kind] for the cluster management and [tilt] with [docker] for the build mechanism. So we will first build a container for our application.
+To work well with a local cluster, we will be leveraging the existing OpenTDF backend quickstart, which builds a working OpenTDF fleet of microservices into a local kubernetes cluster, using [kind] for the cluster management and [tilt] with [docker] for the build mechanism. So we will first build a container for our application.
 
 ```Dockerfile
 FROM python:3.8-slim
@@ -164,7 +164,7 @@ docker_build('opentdf/example-web-app-image', '.',
 
 This will sync the file contents on all file changes, and execute `pip install` when the requirements change.
 
-But this doesn't build the service, as Tile builds a k8s resource graph and there is no correponding kuberenetes deployment. So we must add that with a little k8s yaml:
+But this doesn't build the service, as Tilt builds a k8s resource graph and there is no correponding kuberenetes deployment. So we must add that with a little k8s yaml:
 
 ```yaml
 apiVersion: apps/v1
@@ -200,7 +200,7 @@ We can create a local cluster with the command
 ctlptl create cluster kind --name=kind-opentdf --registry=tk-tdf
 ```
 
-To load and connect to the service, declare it in the Tilefile
+To load and connect to the service, declare it in the Tiltfile
 
 ```Python
 k8s_yaml("kubernetes.yaml")
@@ -215,7 +215,7 @@ and load it via
 tilt up
 ```
 
-This will initialize all backend services, and start a keycloak with an example configuration via the quickstart `keycloak-bootstrap` job. Depending on your computer configuration and network connectivity, this could take 10 minutes to an hour to complete. Notably, then the `opentdf-key-access`, `opentdf-keycloak-bootstrap`, and `web-app` itself are all green, you should be able to `encrypt` a file. (The upper green chevron in a Tile resource label indicates a service with a `ready` status.)
+This will initialize all backend services, and start a keycloak with an example configuration via the quickstart `keycloak-bootstrap` job. Depending on your computer configuration and network connectivity, this could take 10 minutes to an hour to complete. Notably, then the `opentdf-key-access`, `opentdf-keycloak-bootstrap`, and `web-app` itself are all green, you should be able to `encrypt` a file. (The upper green chevron in a Tilt resource label indicates a service with a `ready` status.)
 
 
 [docker]: https://docs.docker.com/get-started/overview/
