@@ -1,0 +1,16 @@
+attributes:
+  serverUrl: http://localhost:65432/api/attributes
+entitlements:
+  serverUrl: http://localhost:65432/api/entitlements
+oidc:
+  serverUrl: http://localhost:65432/auth/
+  clientId: tdf-entitlement
+  realm: tdf
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: localhost
+      paths:
+        - path: /
+          pathType: Prefix
