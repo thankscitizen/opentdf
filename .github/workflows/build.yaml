@@ -11,6 +11,7 @@ jobs:
   deltas:
     runs-on: ubuntu-latest
     outputs:
+      clientapp: ${{ steps.changes.outputs.clientapp }}
       offline: ${{ steps.changes.outputs.offline }}
       quickstart: ${{ steps.changes.outputs.quickstart }}
       scripts: ${{ steps.changes.outputs.scripts }}
@@ -28,6 +29,8 @@ jobs:
               - 'quickstart/**'
             scripts:
               - 'scripts/**'
+            clientapp:
+              - 'examples/nanotdf-client-app/**'
       - name: 🦪 ✔ 🧼🧼🧼
         if: ${{ steps.changes.outputs.scripts }}
         run: >-
@@ -41,7 +44,7 @@ jobs:
       contents: read
       packages: read
     needs: deltas
-    if: ${{ needs.deltas.outputs.quickstart || github.event.schedule }}
+    if: ${{ needs.deltas.outputs.quickstart == 'true' || github.event.schedule }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v3
@@ -87,7 +90,7 @@ jobs:
       packages: read
     needs: deltas
     if: >-
-      ${{ needs.deltas.outputs.offline || github.event.schedule == '0 7 * * 2,4' }}
+      ${{ needs.deltas.outputs.offline == 'true' || github.event.schedule == '0 7 * * 2,4' }}
     steps:
       - uses: actions/checkout@v3
       - name: 🦪 ✔ 🧼🧼🧼
@@ -129,3 +132,44 @@ jobs:
           kubectl version
           kubectl get pods -A
       - run: ./examples/offline/test-offline-bundle
+
+  nanotdf-client-app-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./examples/nanotdf-client-app
+    timeout-minutes: 30
+    needs: deltas
+    if: >-
+      ${{ needs.deltas.outputs.clientapp == 'true' || github.event.schedule == '0 7 * * 2,4' }}
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: "npm"
+          cache-dependency-path: "./examples/nanotdf-client-app/package-lock.json"
+          registry-url: "https://npm.pkg.github.com"
+      - run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      - run: npm test
+      - run: npm audit --audit-level high && npm audit --production
+
+  ci:
+    needs:
+      [deltas, quickstart-test, offline-start-test, nanotdf-client-app-test]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 1
+        if: ${{ needs.deltas.result == 'failure' }}
+      - run: exit 1
+        if: ${{ needs.quickstart-test.result == 'failure' }}
+      - run: exit 1
+        if: ${{ needs.offline-start-test.result == 'failure' }}
+      - run: exit 1
+        if: ${{ needs.nanotdf-client-app-test.result == 'failure' }}
