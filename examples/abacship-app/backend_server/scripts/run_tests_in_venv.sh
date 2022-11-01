@@ -19,3 +19,5 @@ echo "Unit tests passed"
 # echo "Running integration tests"
 # python3 backend_integration_test.py
 # echo "Integration tests passed"
+
+deactivate
