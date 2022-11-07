@@ -39,7 +39,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         FILE_TO_COMMIT: data/traffic.csv
-        DESTINATION_BRANCH: ${{ github.ref }} 
+        DESTINATION_BRANCH: analytics
       run: |
         export TODAY=$( date -u '+%Y-%m-%d' )
         export MESSAGE="Weekly Traffic Report Update: regenerate $FILE_TO_COMMIT for $TODAY"
