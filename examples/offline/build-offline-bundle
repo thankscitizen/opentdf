@@ -84,11 +84,11 @@ suffix="${today}-${digest}"
 : "${OUTPUT_DIRECTORY:="${PROJECT_ROOT}/build/export"}"
 
 # TODO Default to image tags in chart values files
-: "${BACKEND_IMAGE_TAG:="1.1.0"}"
+: "${BACKEND_IMAGE_TAG:="1.1.1"}"
 # FIXME Update with release version
-: "${BACKEND_CHART_TAG:="1.1.0"}"
-: "${FRONTEND_IMAGE_TAG:="1.1.0"}"
-: "${FRONTEND_CHART_TAG:="1.1.0"}"
+: "${BACKEND_CHART_TAG:="1.1.1"}"
+: "${FRONTEND_IMAGE_TAG:="1.1.1"}"
+: "${FRONTEND_CHART_TAG:="1.1.1"}"
 
 # TODO(PLAT-1417) add 'storage' once published to ghcr.io
 services=(abacus attributes entitlement_store entitlement-pdp entitlements entity-resolution kas keycloak-bootstrap)
@@ -179,7 +179,7 @@ if [[ ! $no_third_party && ! $no_images ]]; then
   save-image bitnami/postgresql 11.14.0-debian-10-r28 third-party-image-postgresql
 
   # Keycloak: We are using a custom image with entitlement support
-  save-image "ghcr.io/opentdf/keycloak" 18.0.2 "opentdf-keycloak"
+  save-image "ghcr.io/opentdf/keycloak" 19.0.2 "opentdf-keycloak"
 
   # nginx ingress
   save-image k8s.gcr.io/ingress-nginx/controller v1.1.1 third-party-image-ingress-nginx
@@ -194,7 +194,7 @@ if [[ ! $no_third_party && ! $no_charts ]]; then
     monolog ERROR "Unable to helm pull ingress-nginx"
     exit 1
   fi
-  if ! helm pull --repo https://codecentric.github.io/helm-charts --version 1.4.2 --destination "${OUT_DIR}/charts" keycloakx; then
+  if ! helm pull --repo https://codecentric.github.io/helm-charts --version 1.6.1 --destination "${OUT_DIR}/charts" keycloakx; then
     monolog ERROR "Unable to helm pull keycloak"
     exit 1
   fi

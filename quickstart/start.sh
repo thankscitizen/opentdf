@@ -41,7 +41,7 @@ REWRITE_HOSTNAME=1
 # NOTE: 1.1.0 default values. When releasing a new version, move these below to
 # the api-version selector and update the default.
 services=(abacus attributes entitlement-pdp entitlement-store entitlements entity-resolution kas keycloak keycloak-bootstrap)
-chart_tags=(1.1.0{,,,,,,,})
+chart_tags=(1.1.1{,,,,,,,})
 
 while [[ $# -gt 0 ]]; do
   key="$1"
@@ -249,7 +249,7 @@ fi
 if [[ $USE_KEYCLOAK ]]; then
   monolog INFO --- "Installing Virtru-ified Keycloak"
   if [[ $RUN_OFFLINE ]]; then
-    helm upgrade --install keycloak "${CHART_ROOT}"/keycloakx-1.4.2.tgz -f "${DEPLOYMENT_DIR}/values-keycloak.yaml" --set image.tag=${SERVICE_IMAGE_TAG}
+    helm upgrade --install keycloak "${CHART_ROOT}"/keycloakx-1.6.1.tgz -f "${DEPLOYMENT_DIR}/values-keycloak.yaml" --set image.tag=${SERVICE_IMAGE_TAG}
   else
     helm upgrade --install keycloak --repo https://codecentric.github.io/helm-charts keycloakx -f "${DEPLOYMENT_DIR}/values-keycloak.yaml" --set image.tag=${SERVICE_IMAGE_TAG}
   fi
