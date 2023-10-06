@@ -56,14 +56,12 @@ try:
     else:
         print("Error: TDF Encrypt/Decrypt failed!!")
 
-
     #################################################
     # Nano TDF - File API
     ################################################
 
     # create a nano tdf client.
-    nano_tdf_client = NanoTDFClient(oidc_credentials = oidc_creds,
-                                 kas_url = KAS_URL)
+    nano_tdf_client = NanoTDFClient(oidc_credentials=oidc_creds, kas_url=KAS_URL)
     nano_tdf_client.enable_console_logging(LogLevel.Warn)
     nano_tdf_client.enable_benchmark()
 
@@ -85,7 +83,9 @@ try:
 
     sampleEncryptedStringStorageNano = TDFStorageType()
     sampleEncryptedStringStorageNano.set_tdf_storage_string_type(nan_tdf_data)
-    decrypted_plain_text = nano_tdf_client.decrypt_data(sampleEncryptedStringStorageNano)
+    decrypted_plain_text = nano_tdf_client.decrypt_data(
+        sampleEncryptedStringStorageNano
+    )
 
     if plain_text == decrypted_plain_text.decode("utf-8"):
         print("Nano TDF Encrypt/Decrypt is successful!!")

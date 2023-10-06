@@ -1,19 +1,17 @@
 # Context: backend_server
 
-ARG PY_VERSION=3.10
-ARG ALPINE_VERSION=3.15
+ARG PY_VERSION=3.11
 
 # stage - build
-# FROM python:${PY_VERSION}-alpine${ALPINE_VERSION} AS build
-FROM python:${PY_VERSION} as build
+FROM python:${PY_VERSION} AS build
 
 WORKDIR /build
 
 COPY requirements.txt requirements.txt
-COPY ./app ./app
 RUN echo $(arch)
 RUN pip3 install --no-cache-dir --upgrade pip setuptools
 RUN pip3 install --no-cache-dir --requirement requirements.txt
+COPY ./app ./app
 
 # Server
 ENV SERVER_ROOT_PATH "/"
